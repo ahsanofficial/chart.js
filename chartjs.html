@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    div {
+        height: 400px;
+        width: 800px;
+        border: 1px solid red;
+    }
+</style>
+
+<body>
+    <input type="text" placeholder="month" id="month">
+    <input type="text" placeholder="performance" id="performance">
+    <input type="text" placeholder="attendance" id="attendance">
+    <button id="btn">ADD NEW DATA</button>
+
+    <!-- canvas is better than svg -->
+    <div>
+        <canvas id="chart"></canvas>
+    </div>
+    <button id="remove">REMOVE LAST</button>
+    <!-- this is docs link and this link work not properly -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> -->
+    <!-- this is albert link -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+    <script>
+        var ctx, chart
+
+        // window.addEventListener('load', function () {
+        ctx = document.getElementById('chart');
+        var btn = document.getElementById('btn')
+        btn.addEventListener('click', () => {
+            var month = document.getElementById('month').value
+            var performance = document.getElementById('performance').value
+            var attendance = document.getElementById('attendance').value
+            addData(chart, { month, performance, attendance })
+        })
+
+        var remove = document.getElementById('remove')
+        remove.addEventListener('click', () => {
+            chart.data.labels.pop()
+            chart.data.datasets.forEach(datasets => {
+                datasets.data.pop()
+            })
+            chart.update()
+        })
+        // })
+
+        chart = new Chart(ctx, {
+            type: 'bar', //line,pie,horizontalBar etc
+            data: {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August'],
+                datasets: [{
+                    label: 'attendance',
+                    data: [40, 60, 30, 50, 100, 80, 10, 90],
+                    backgroundColor: [createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255)],
+                    borderWidth: 5
+                },
+                {
+                    label: 'performance',
+                    data: [30, 40, 80, 10, 40, 30, 8, 40],
+                    backgroundColor: [createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255), createColor(255)],
+                    borderWidth: 2
+                }],
+            },
+            options: {
+                scales: {
+                    xAxes: [
+                        {
+                            ticks:{
+                                beginAtZero: true
+                            }
+                        }
+                    ]
+                }
+            }
+        });
+
+        function random(num) {
+            return Math.floor(Math.random() * num)
+        }
+
+        function createColor(num) {
+            return `rgb(${random(num)},${random(num)},${random(num)})`
+        }
+
+        function addData(chart, { month, performance, attendance }) {
+            chart.data.labels.push(month)
+            chart.data.datasets[0].data.push(attendance)
+            chart.data.datasets[1].data.push(performance)
+            chart.update()
+        }
+    </script>
+
+</body>
+
+</html>
